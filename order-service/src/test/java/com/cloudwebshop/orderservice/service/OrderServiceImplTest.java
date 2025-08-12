@@ -1,7 +1,5 @@
 package com.cloudwebshop.orderservice.service;
 
-import com.cloudwebshop.orderservice.dto.OrderDto;
-import com.cloudwebshop.orderservice.mapper.OrderMapper;
 import com.cloudwebshop.orderservice.model.Order;
 import com.cloudwebshop.orderservice.model.OrderStatus;
 import com.cloudwebshop.orderservice.repository.OrderItemRepository;
@@ -13,6 +11,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.Collections;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -29,8 +28,9 @@ class OrderServiceImplTest {
     @Mock
     private OrderItemRepository orderItemRepository;
 
-    @Mock
-    private OrderMapper orderMapper;
+    // The mapper is no longer part of the service, so we remove the mock for it.
+    // @Mock
+    // private OrderMapper orderMapper;
 
     @InjectMocks
     private OrderServiceImpl orderService;
@@ -48,34 +48,34 @@ class OrderServiceImplTest {
     }
 
     @Test
-    void getCart_whenCartExists_returnsDto() {
+    void getCart_whenCartExists_returnsEntity() {
         when(orderRepository.findFirstByUserIdAndStatus(userId, OrderStatus.CART)).thenReturn(Optional.of(cart));
-        when(orderMapper.toOrderDto(cart)).thenReturn(new OrderDto());
 
-        OrderDto result = orderService.getCart(userId);
+        Order result = orderService.getCart(userId);
 
         assertNotNull(result);
+        assertEquals(cart.getId(), result.getId());
         verify(orderRepository).findFirstByUserIdAndStatus(userId, OrderStatus.CART);
-        verify(orderMapper).toOrderDto(cart);
+        verify(orderRepository, never()).save(any());
     }
 
     @Test
-    void getCart_whenCartDoesNotExist_createsAndReturnsDto() {
+    void getCart_whenCartDoesNotExist_createsAndReturnsEntity() {
         when(orderRepository.findFirstByUserIdAndStatus(userId, OrderStatus.CART)).thenReturn(Optional.empty());
+        // When save is called for a new cart, return our cart object
         when(orderRepository.save(any(Order.class))).thenReturn(cart);
-        when(orderMapper.toOrderDto(cart)).thenReturn(new OrderDto());
 
-        OrderDto result = orderService.getCart(userId);
+        Order result = orderService.getCart(userId);
 
         assertNotNull(result);
+        assertEquals(cart.getId(), result.getId());
         verify(orderRepository).findFirstByUserIdAndStatus(userId, OrderStatus.CART);
         verify(orderRepository).save(any(Order.class));
-        verify(orderMapper).toOrderDto(cart);
     }
 
     @Test
     void createOrderFromCart_withEmptyCart_throwsException() {
-        cart.setItems(java.util.Collections.emptyList());
+        cart.setItems(Collections.emptyList());
         when(orderRepository.findFirstByUserIdAndStatus(userId, OrderStatus.CART)).thenReturn(Optional.of(cart));
 
         assertThrows(IllegalStateException.class, () -> {
