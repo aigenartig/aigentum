@@ -1,7 +1,5 @@
 package com.cloudwebshop.orderservice.service;
 
-import com.cloudwebshop.orderservice.dto.AddItemRequestDto;
-import com.cloudwebshop.orderservice.dto.UpdateCartItemRequestDto;
 import com.cloudwebshop.orderservice.model.Order;
 import com.cloudwebshop.orderservice.model.OrderItem;
 import com.cloudwebshop.orderservice.model.OrderStatus;
@@ -32,17 +30,17 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     @Transactional
-    public Order addItemToCart(UUID userId, AddItemRequestDto itemRequest) {
+    public Order addItemToCart(UUID userId, UUID productId, Integer quantity) {
         Order cart = findOrCreateCart(userId);
         cart.getItems().stream()
-                .filter(item -> item.getProductId().equals(itemRequest.getProductId()))
+                .filter(item -> item.getProductId().equals(productId))
                 .findFirst()
                 .ifPresentOrElse(
-                        item -> item.setQuantity(item.getQuantity() + itemRequest.getQuantity()),
+                        item -> item.setQuantity(item.getQuantity() + quantity),
                         () -> {
                             OrderItem newItem = new OrderItem();
-                            newItem.setProductId(itemRequest.getProductId());
-                            newItem.setQuantity(itemRequest.getQuantity());
+                            newItem.setProductId(productId);
+                            newItem.setQuantity(quantity);
                             newItem.setUnitPrice(new BigDecimal("99.99")); // Placeholder price
                             newItem.setOrder(cart);
                             cart.getItems().add(newItem);
@@ -54,13 +52,13 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     @Transactional
-    public Order updateCartItem(UUID userId, UUID itemId, UpdateCartItemRequestDto itemRequest) {
+    public Order updateCartItem(UUID userId, UUID itemId, Integer quantity) {
         Order cart = findOrCreateCart(userId);
         OrderItem itemToUpdate = cart.getItems().stream()
                 .filter(item -> item.getId().equals(itemId))
                 .findFirst()
                 .orElseThrow(() -> new EntityNotFoundException("Item not found in cart"));
-        itemToUpdate.setQuantity(itemRequest.getQuantity());
+        itemToUpdate.setQuantity(quantity);
         recalculateCartTotals(cart);
         return orderRepository.save(cart);
     }

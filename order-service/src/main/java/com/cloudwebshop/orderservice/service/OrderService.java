@@ -1,7 +1,5 @@
 package com.cloudwebshop.orderservice.service;
 
-import com.cloudwebshop.orderservice.dto.AddItemRequestDto;
-import com.cloudwebshop.orderservice.dto.UpdateCartItemRequestDto;
 import com.cloudwebshop.orderservice.model.Order;
 
 import java.util.List;
@@ -11,8 +9,8 @@ public interface OrderService {
 
     // Cart methods
     Order getCart(UUID userId);
-    Order addItemToCart(UUID userId, AddItemRequestDto itemRequest);
-    Order updateCartItem(UUID userId, UUID itemId, UpdateCartItemRequestDto itemRequest);
+    Order addItemToCart(UUID userId, UUID productId, Integer quantity);
+    Order updateCartItem(UUID userId, UUID itemId, Integer quantity);
     void deleteCartItem(UUID userId, UUID itemId);
 
     // Order methods

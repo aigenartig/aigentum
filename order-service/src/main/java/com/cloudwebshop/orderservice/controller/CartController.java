@@ -33,13 +33,21 @@ public class CartController {
 
     @PostMapping("/items")
     public ResponseEntity<OrderDto> addItemToCart(@Valid @RequestBody AddItemRequestDto itemRequest) {
-        Order updatedCart = orderService.addItemToCart(getAuthenticatedUserId(), itemRequest);
+        Order updatedCart = orderService.addItemToCart(
+                getAuthenticatedUserId(),
+                itemRequest.getProductId(),
+                itemRequest.getQuantity()
+        );
         return ResponseEntity.ok(orderMapper.toOrderDto(updatedCart));
     }
 
     @PutMapping("/items/{id}")
     public ResponseEntity<OrderDto> updateCartItem(@PathVariable UUID id, @Valid @RequestBody UpdateCartItemRequestDto itemRequest) {
-        Order updatedCart = orderService.updateCartItem(getAuthenticatedUserId(), id, itemRequest);
+        Order updatedCart = orderService.updateCartItem(
+                getAuthenticatedUserId(),
+                id,
+                itemRequest.getQuantity()
+        );
         return ResponseEntity.ok(orderMapper.toOrderDto(updatedCart));
     }
 
