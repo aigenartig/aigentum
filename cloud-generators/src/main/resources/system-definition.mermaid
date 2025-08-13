@@ -1,0 +1,76 @@
+classDiagram
+    direction LR
+
+    class User {
+        <<Entity>>
+        +UUID id
+        +String email
+        +String passwordHash
+        +String firstName
+        +String lastName
+        +String phone
+        +UserStatus status
+        +LocalDateTime createdAt
+        +LocalDateTime updatedAt
+    }
+
+    class Order {
+        <<Entity>>
+        +UUID id
+        +String orderNumber
+        +UUID userId
+        +OrderStatus status
+        +BigDecimal totalAmount
+        +String currency
+        +String shippingAddress
+        +String billingAddress
+        +List~OrderItem~ items
+        +LocalDateTime createdAt
+        +LocalDateTime updatedAt
+    }
+
+    class OrderItem {
+        <<Entity>>
+        +UUID id
+        +UUID productId
+        +Integer quantity
+        +BigDecimal unitPrice
+        +BigDecimal totalPrice
+    }
+
+    Order "1" -- "0..*" OrderItem : contains
+
+    class UserService {
+        <<Interface>>
+        +User getUserProfile(UUID userId)
+        +User updateUserProfile(User user)
+        +void deleteUserAccount(UUID userId)
+    }
+
+    class OrderService {
+        <<Interface>>
+        +Order getCart(UUID userId)
+        +Order addItemToCart(UUID userId, UUID productId, Integer quantity)
+        +Order updateCartItem(UUID userId, UUID itemId, Integer quantity)
+        +void deleteCartItem(UUID userId, UUID itemId)
+        +List~Order~ getOrdersForUser(UUID userId)
+        +Order createOrderFromCart(UUID userId)
+        ...
+    }
+
+    class UserStatus {
+        <<Enumeration>>
+        ACTIVE
+        INACTIVE
+        DELETED
+    }
+
+    class OrderStatus {
+        <<Enumeration>>
+        CART
+        PENDING
+        PROCESSING
+        SHIPPED
+        DELIVERED
+        CANCELLED
+    }
