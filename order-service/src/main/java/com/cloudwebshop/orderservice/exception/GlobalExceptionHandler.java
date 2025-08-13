@@ -5,12 +5,16 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.context.request.WebRequest;
 
 import java.time.LocalDateTime;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
+
+    private static final Logger logger = LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
     @ExceptionHandler(EntityNotFoundException.class)
     public ResponseEntity<ErrorDto> handleEntityNotFoundException(EntityNotFoundException ex, WebRequest request) {
@@ -47,7 +51,7 @@ public class GlobalExceptionHandler {
                 request.getDescription(false)
         );
         // It's good practice to log the full exception here
-        // log.error("Unhandled exception:", ex);
+        logger.error("An unexpected error occurred: ", ex);
         return new ResponseEntity<>(errorDto, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }
