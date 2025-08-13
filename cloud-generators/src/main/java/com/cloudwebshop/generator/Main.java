@@ -12,7 +12,8 @@ public class Main {
             System.out.println("Starting code generation...");
 
             ModelParser parser = new ModelParser();
-            ServiceGenerator generator = new ServiceGenerator();
+            ServiceGenerator interfaceGenerator = new ServiceGenerator();
+            ServiceImplGenerator implGenerator = new ServiceImplGenerator();
 
             Path inputFile = Paths.get("src/main/resources/system-definition.mermaid");
             Path outputDir = Paths.get("target/generated-sources/java");
@@ -22,8 +23,9 @@ public class Main {
             System.out.println("Found " + services.size() + " service definitions.");
 
             for (ServiceDefinition service : services) {
-                System.out.println("Generating service: " + service.getName());
-                generator.generate(service, outputDir);
+                System.out.println("--- Generating for " + service.getName() + " ---");
+                interfaceGenerator.generate(service, outputDir);
+                implGenerator.generate(service, outputDir);
             }
 
             System.out.println("Code generation finished successfully.");

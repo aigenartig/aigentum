@@ -1,6 +1,8 @@
 /app/cloud-generators/src/main/java/com/cloudwebshop/generator/Main.java
 /app/cloud-generators/src/main/java/com/cloudwebshop/generator/ModelParser.java
 /app/cloud-generators/src/main/java/com/cloudwebshop/generator/ServiceGenerator.java
+/app/cloud-generators/src/main/java/com/cloudwebshop/generator/ServiceImplGenerator.java
+/app/cloud-generators/src/main/java/com/cloudwebshop/generator/config/GeneratorConfig.java
 /app/cloud-generators/src/main/java/com/cloudwebshop/generator/model/MethodDefinition.java
 /app/cloud-generators/src/main/java/com/cloudwebshop/generator/model/ParameterDefinition.java
 /app/cloud-generators/src/main/java/com/cloudwebshop/generator/model/ServiceDefinition.java
