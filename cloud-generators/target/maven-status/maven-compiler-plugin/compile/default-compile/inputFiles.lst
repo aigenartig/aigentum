@@ -1,6 +1,6 @@
-/app/cloud-generators/src/main/java/com/cloudwebshop/generator/Main.java
-/app/cloud-generators/src/main/java/com/cloudwebshop/generator/ModelParser.java
-/app/cloud-generators/src/main/java/com/cloudwebshop/generator/ServiceGenerator.java
-/app/cloud-generators/src/main/java/com/cloudwebshop/generator/model/MethodDefinition.java
-/app/cloud-generators/src/main/java/com/cloudwebshop/generator/model/ParameterDefinition.java
-/app/cloud-generators/src/main/java/com/cloudwebshop/generator/model/ServiceDefinition.java
+/home/michael/dev/git/aigentum/cloud-generators/src/main/java/com/cloudwebshop/generator/Main.java
+/home/michael/dev/git/aigentum/cloud-generators/src/main/java/com/cloudwebshop/generator/ModelParser.java
+/home/michael/dev/git/aigentum/cloud-generators/src/main/java/com/cloudwebshop/generator/ServiceGenerator.java
+/home/michael/dev/git/aigentum/cloud-generators/src/main/java/com/cloudwebshop/generator/model/MethodDefinition.java
+/home/michael/dev/git/aigentum/cloud-generators/src/main/java/com/cloudwebshop/generator/model/ParameterDefinition.java
+/home/michael/dev/git/aigentum/cloud-generators/src/main/java/com/cloudwebshop/generator/model/ServiceDefinition.java

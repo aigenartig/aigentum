@@ -6,17 +6,15 @@ import com.cloudwebshop.orderservice.model.Order;
 import com.cloudwebshop.orderservice.model.OrderItem;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import org.mapstruct.factory.Mappers;
 
 import java.util.List;
 
 @Mapper(componentModel = "spring")
 public interface OrderMapper {
 
-    OrderMapper INSTANCE = Mappers.getMapper(OrderMapper.class);
-
     // Order to OrderDto
-    @Mapping(source = "status", target = "status") // Example of explicit mapping if needed, though not required here
+    @Mapping(source = "items", target = "items")
+    @Mapping(source = "status", target = "status")
     OrderDto toOrderDto(Order order);
 
     // OrderItem to OrderItemDto

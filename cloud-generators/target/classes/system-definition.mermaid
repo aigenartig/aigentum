@@ -58,13 +58,15 @@ classDiagram
         ...
     }
 
-    enum UserStatus {
+    class UserStatus {
+        <<Enumeration>>
         ACTIVE
         INACTIVE
         DELETED
     }
 
-    enum OrderStatus {
+    class OrderStatus {
+        <<Enumeration>>
         CART
         PENDING
         PROCESSING
