@@ -1,5 +1,5 @@
 import { userServiceApi } from './apiClient';
-import { User } from '../types';
+import type { User } from '../types';
 
 export const getUserProfile = async (userId: string): Promise<User> => {
   const response = await userServiceApi.get(`/users/${userId}`);

@@ -1,5 +1,5 @@
 import { orderServiceApi } from './apiClient';
-import { Order } from '../types';
+import type { Order } from '../types';
 
 export const getCart = async (userId: string): Promise<Order> => {
   const response = await orderServiceApi.get(`/orders/cart/${userId}`);
