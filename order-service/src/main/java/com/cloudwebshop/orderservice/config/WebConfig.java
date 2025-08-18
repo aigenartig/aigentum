@@ -1,4 +1,4 @@
-package com.cloudwebshop.userservice.config;
+package com.cloudwebshop.orderservice.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
