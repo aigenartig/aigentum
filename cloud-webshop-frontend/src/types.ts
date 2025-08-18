@@ -1,12 +1,17 @@
-export type UserStatus = 'ACTIVE' | 'INACTIVE' | 'DELETED';
+export enum UserStatus {
+  ACTIVE = 'ACTIVE',
+  INACTIVE = 'INACTIVE',
+  DELETED = 'DELETED',
+}
 
-export type OrderStatus =
-  | 'CART'
-  | 'PENDING'
-  | 'PROCESSING'
-  | 'SHIPPED'
-  | 'DELIVERED'
-  | 'CANCELLED';
+export enum OrderStatus {
+  CART = 'CART',
+  PENDING = 'PENDING',
+  PROCESSING = 'PROCESSING',
+  SHIPPED = 'SHIPPED',
+  DELIVERED = 'DELIVERED',
+  CANCELLED = 'CANCELLED',
+}
 
 export interface User {
   id: string; // UUID
