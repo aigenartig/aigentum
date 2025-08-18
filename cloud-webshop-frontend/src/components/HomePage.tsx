@@ -4,7 +4,7 @@ import { Link as RouterLink } from 'react-router-dom';
 
 const HomePage: React.FC = () => {
   // A mock user ID for demonstration purposes
-  const mockUserId = '123e4567-e89b-12d3-a456-426614174000';
+  const mockUserId = '11111111-1111-1111-1111-111111111111';
 
   return (
     <Container>
@@ -37,4 +37,4 @@ const HomePage: React.FC = () => {
   );
 };
 
-export default HomePage;
+export default HomePage; 
