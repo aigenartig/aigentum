@@ -20,6 +20,11 @@ public class UserController {
     private final UserService userService;
     private final UserMapper userMapper;
 
+    private UUID getAuthenticatedUserId() {
+        // In a real app, this comes from the security context
+        return UUID.fromString("a1b2c3d4-e5f6-7890-1234-567890abcdef");
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<UserDto> getUserById(@PathVariable UUID id) {
         User userEntity = userService.getUserProfile(id);
