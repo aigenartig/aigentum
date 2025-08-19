@@ -13,7 +13,7 @@ function App() {
         </Typography>
         <Routes>
           <Route path="/" element={<HomePage />} />
-          <Route path="/users/:userId" element={<UserProfile />} />
+          <Route path="/api/v1/users/:userId" element={<UserProfile />} />
           <Route path="/cart/:userId" element={<ShoppingCart />} />
         </Routes>
       </Container>
