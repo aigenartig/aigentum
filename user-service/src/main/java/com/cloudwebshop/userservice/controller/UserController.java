@@ -13,28 +13,22 @@ import org.springframework.web.bind.annotation.*;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/api/v1/users")
+@RequestMapping("/api/users")
 @RequiredArgsConstructor
 public class UserController {
 
     private final UserService userService;
     private final UserMapper userMapper;
 
-    private UUID getAuthenticatedUserId() {
-        // In a real app, this comes from the security context
-        return UUID.fromString("a1b2c3d4-e5f6-7890-1234-567890abcdef");
-    }
-
-    @GetMapping("/profile")
-    public ResponseEntity<UserDto> getProfile() {
-        User userEntity = userService.getUserProfile(getAuthenticatedUserId());
+    @GetMapping("/{id}")
+    public ResponseEntity<UserDto> getUserById(@PathVariable UUID id) {
+        User userEntity = userService.getUserProfile(id);
         return ResponseEntity.ok(userMapper.toUserDto(userEntity));
     }
 
-    @PutMapping("/profile")
-    public ResponseEntity<UserDto> updateProfile(@Valid @RequestBody UpdateUserRequestDto requestDto) {
-        UUID userId = getAuthenticatedUserId();
-        User currentUser = userService.getUserProfile(userId);
+    @PutMapping("/{id}")
+    public ResponseEntity<UserDto> updateUser(@PathVariable UUID id, @Valid @RequestBody UpdateUserRequestDto requestDto) {
+        User currentUser = userService.getUserProfile(id);
 
         // Manually update fields from DTO if they are not null
         if (requestDto.getFirstName() != null) {
@@ -54,9 +48,9 @@ public class UserController {
         return ResponseEntity.ok(userMapper.toUserDto(updatedUser));
     }
 
-    @DeleteMapping("/account")
-    public ResponseEntity<Void> deleteAccount() {
-        userService.deleteUserAccount(getAuthenticatedUserId());
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteUser(@PathVariable UUID id) {
+        userService.deleteUserAccount(id);
         return ResponseEntity.noContent().build();
     }
 }
