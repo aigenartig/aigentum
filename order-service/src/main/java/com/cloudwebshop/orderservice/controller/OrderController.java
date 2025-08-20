@@ -22,7 +22,7 @@ public class OrderController {
     private final OrderMapper orderMapper;
 
     private UUID getAuthenticatedUserId() {
-        return UUID.fromString("a1b2c3d4-e5f6-7890-1234-567890abcdef");
+        return UUID.fromString("11111111-1111-1111-1111-111111111111");
     }
 
     @GetMapping
