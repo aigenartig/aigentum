@@ -68,4 +68,37 @@ class UserServiceImplTest {
         assertEquals(UserStatus.DELETED, user.getStatus());
         verify(userRepository).save(user);
     }
+
+    @Test
+    void updateUserProfile_whenUserExists_savesAndReturnsUser() {
+        when(userRepository.existsById(userId)).thenReturn(true);
+        // Use thenAnswer to return the argument that was passed to the save method
+        when(userRepository.save(any(User.class))).thenAnswer(invocation -> invocation.getArgument(0));
+
+        User updatedUser = new User();
+        updatedUser.setId(userId);
+        updatedUser.setEmail("new.email@example.com");
+
+        User result = userService.updateUserProfile(updatedUser);
+
+        assertNotNull(result);
+        assertEquals("new.email@example.com", result.getEmail());
+        verify(userRepository).existsById(userId);
+        verify(userRepository).save(updatedUser);
+    }
+
+    @Test
+    void updateUserProfile_whenUserDoesNotExist_throwsEntityNotFoundException() {
+        when(userRepository.existsById(userId)).thenReturn(false);
+
+        User updatedUser = new User();
+        updatedUser.setId(userId);
+
+        assertThrows(EntityNotFoundException.class, () -> {
+            userService.updateUserProfile(updatedUser);
+        });
+
+        verify(userRepository).existsById(userId);
+        verify(userRepository, never()).save(any(User.class));
+    }
 }
