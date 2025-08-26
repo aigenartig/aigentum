@@ -3,110 +3,101 @@ package com.cloudwebshop.userservice.service;
 import com.cloudwebshop.userservice.model.User;
 import com.cloudwebshop.userservice.model.UserStatus;
 import com.cloudwebshop.userservice.repository.UserRepository;
-import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityNotFoundException;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.transaction.annotation.Transactional;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.time.LocalDateTime;
+import java.util.Optional;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
-@SpringBootTest
-@ActiveProfiles("test")
-@Transactional
+@ExtendWith(MockitoExtension.class)
 class UserServiceImplTest {
 
-    @Autowired
+    @Mock
     private UserRepository userRepository;
 
-    @Autowired
-    private UserService userService;
+    @InjectMocks
+    private UserServiceImpl userService;
 
-    @Test
-    void getUserProfile_whenUserExists_returnsUser() {
-        // Given
-        UUID userId = UUID.randomUUID();
-        User user = new User();
+    private User user;
+    private UUID userId;
+
+    @BeforeEach
+    void setUp() {
+        userId = UUID.randomUUID();
+        user = new User();
         user.setId(userId);
-        user.setEmail("test1@example.com");
-        user.setPasswordHash("password");
+        user.setEmail("test@example.com");
         user.setStatus(UserStatus.ACTIVE);
-        userRepository.save(user);
-
-        // When
-        User foundUser = userService.getUserProfile(userId);
-
-        // Then
-        assertNotNull(foundUser);
-        assertEquals(userId, foundUser.getId());
     }
 
     @Test
-    void getUserProfile_whenUserDoesNotExist_throwsException() {
-        // Given
-        UUID nonExistentId = UUID.randomUUID();
+    void getUserProfile_whenUserExists_returnsUser() {
+        when(userRepository.findById(userId)).thenReturn(Optional.of(user));
 
-        // When & Then
+        User foundUser = userService.getUserProfile(userId);
+
+        assertNotNull(foundUser);
+        assertEquals(userId, foundUser.getId());
+        verify(userRepository).findById(userId);
+    }
+
+    @Test
+    void getUserProfile_whenUserDoesNotExist_throwsEntityNotFoundException() {
+        when(userRepository.findById(userId)).thenReturn(Optional.empty());
+
         assertThrows(EntityNotFoundException.class, () -> {
-            userService.getUserProfile(nonExistentId);
+            userService.getUserProfile(userId);
         });
     }
 
     @Test
     void deleteUserAccount_setsStatusToDeleted() {
-        // Given
-        UUID userId = UUID.randomUUID();
-        User user = new User();
-        user.setId(userId);
-        user.setEmail("test2@example.com");
-        user.setPasswordHash("password");
-        user.setStatus(UserStatus.ACTIVE);
-        userRepository.save(user);
+        when(userRepository.findById(userId)).thenReturn(Optional.of(user));
+        when(userRepository.save(any(User.class))).thenReturn(user);
 
-        // When
         userService.deleteUserAccount(userId);
 
-        // Then
-        User deletedUser = userRepository.findById(userId).orElseThrow();
-        assertEquals(UserStatus.DELETED, deletedUser.getStatus());
+        assertEquals(UserStatus.DELETED, user.getStatus());
+        verify(userRepository).save(user);
     }
 
     @Test
     void updateUserProfile_whenUserExists_savesAndReturnsUser() {
-        // Given
-        UUID userId = UUID.randomUUID();
-        User user = new User();
-        user.setId(userId);
-        user.setEmail("test3@example.com");
-        user.setPasswordHash("password");
-        user.setStatus(UserStatus.ACTIVE);
-        userRepository.save(user);
+        when(userRepository.existsById(userId)).thenReturn(true);
+        when(userRepository.save(any(User.class))).thenAnswer(invocation -> invocation.getArgument(0));
 
-        user.setEmail("new.email@example.com");
+        User updatedUser = new User();
+        updatedUser.setId(userId);
+        updatedUser.setEmail("new.email@example.com");
 
-        // When
-        User result = userService.updateUserProfile(user);
+        User result = userService.updateUserProfile(updatedUser);
 
-        // Then
         assertNotNull(result);
         assertEquals("new.email@example.com", result.getEmail());
+        verify(userRepository).existsById(userId);
+        verify(userRepository).save(updatedUser);
     }
 
     @Test
-    void updateUserProfile_whenUserDoesNotExist_throwsException() {
-        // Given
-        User nonExistentUser = new User();
-        nonExistentUser.setId(UUID.randomUUID());
-        nonExistentUser.setEmail("nonexistent@example.com");
+    void updateUserProfile_whenUserDoesNotExist_throwsEntityNotFoundException() {
+        when(userRepository.existsById(userId)).thenReturn(false);
 
-        // When & Then
+        User updatedUser = new User();
+        updatedUser.setId(userId);
+
         assertThrows(EntityNotFoundException.class, () -> {
-            userService.updateUserProfile(nonExistentUser);
+            userService.updateUserProfile(updatedUser);
         });
+
+        verify(userRepository).existsById(userId);
+        verify(userRepository, never()).save(any(User.class));
     }
 }

@@ -5,6 +5,7 @@ import com.cloudwebshop.orderservice.model.OrderItem;
 import com.cloudwebshop.orderservice.model.OrderStatus;
 import com.cloudwebshop.orderservice.repository.OrderItemRepository;
 import com.cloudwebshop.orderservice.repository.OrderRepository;
+import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -91,5 +92,77 @@ class OrderServiceImplTest {
         when(orderRepository.findFirstByUserIdAndStatus(userId, OrderStatus.CART)).thenReturn(Optional.of(cart));
         assertThrows(IllegalStateException.class, () -> orderService.createOrderFromCart(userId));
         verify(orderRepository, never()).save(any(Order.class));
+    }
+
+    @Test
+    void updateCartItem_whenItemExists_updatesQuantity() {
+        UUID itemId = UUID.randomUUID();
+        OrderItem item = new OrderItem();
+        item.setId(itemId);
+        item.setQuantity(1);
+        item.setUnitPrice(new BigDecimal("10.00"));
+        cart.getItems().add(item);
+
+        when(orderRepository.findFirstByUserIdAndStatus(userId, OrderStatus.CART)).thenReturn(Optional.of(cart));
+        when(orderRepository.save(any(Order.class))).thenAnswer(inv -> inv.getArgument(0));
+
+        Order result = orderService.updateCartItem(userId, itemId, 5);
+
+        assertEquals(1, result.getItems().size());
+        assertEquals(5, result.getItems().get(0).getQuantity());
+        assertEquals(new BigDecimal("50.00"), result.getTotalAmount());
+        verify(orderRepository).save(cart);
+    }
+
+    @Test
+    void updateCartItem_whenItemDoesNotExist_throwsException() {
+        when(orderRepository.findFirstByUserIdAndStatus(userId, OrderStatus.CART)).thenReturn(Optional.of(cart));
+
+        UUID nonExistentItemId = UUID.randomUUID();
+        assertThrows(EntityNotFoundException.class, () -> {
+            orderService.updateCartItem(userId, nonExistentItemId, 5);
+        });
+        verify(orderRepository, never()).save(any(Order.class));
+    }
+
+    @Test
+    void deleteCartItem_whenItemExists_removesItem() {
+        UUID itemId = UUID.randomUUID();
+        OrderItem item = new OrderItem();
+        item.setId(itemId);
+        item.setQuantity(1);
+        item.setUnitPrice(new BigDecimal("10.00"));
+        cart.getItems().add(item);
+
+        when(orderRepository.findFirstByUserIdAndStatus(userId, OrderStatus.CART)).thenReturn(Optional.of(cart));
+
+        orderService.deleteCartItem(userId, itemId);
+
+        assertTrue(cart.getItems().isEmpty());
+        assertEquals(BigDecimal.ZERO, cart.getTotalAmount());
+        verify(orderRepository).save(cart);
+    }
+
+    @Test
+    void deleteCartItem_whenItemDoesNotExist_throwsException() {
+        when(orderRepository.findFirstByUserIdAndStatus(userId, OrderStatus.CART)).thenReturn(Optional.of(cart));
+        UUID nonExistentItemId = UUID.randomUUID();
+        assertThrows(EntityNotFoundException.class, () -> {
+            orderService.deleteCartItem(userId, nonExistentItemId);
+        });
+        verify(orderRepository, never()).save(any(Order.class));
+    }
+
+    @Test
+    void getOrdersForUser_returnsOnlyNonCartOrders() {
+        Order deliveredOrder = new Order();
+        deliveredOrder.setStatus(OrderStatus.DELIVERED);
+        when(orderRepository.findAllByUserIdAndStatusNot(userId, OrderStatus.CART)).thenReturn(Collections.singletonList(deliveredOrder));
+
+        var result = orderService.getOrdersForUser(userId);
+
+        assertEquals(1, result.size());
+        assertEquals(OrderStatus.DELIVERED, result.get(0).getStatus());
+        verify(orderRepository).findAllByUserIdAndStatusNot(userId, OrderStatus.CART);
     }
 }
