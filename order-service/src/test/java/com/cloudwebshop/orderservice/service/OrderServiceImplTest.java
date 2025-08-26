@@ -3,6 +3,7 @@ package com.cloudwebshop.orderservice.service;
 import com.cloudwebshop.orderservice.model.Order;
 import com.cloudwebshop.orderservice.model.OrderItem;
 import com.cloudwebshop.orderservice.model.OrderStatus;
+import com.cloudwebshop.orderservice.model.OrderStatus;
 import com.cloudwebshop.orderservice.repository.OrderItemRepository;
 import com.cloudwebshop.orderservice.repository.OrderRepository;
 import jakarta.persistence.EntityNotFoundException;

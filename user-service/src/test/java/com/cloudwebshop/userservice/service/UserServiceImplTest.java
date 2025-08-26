@@ -72,6 +72,7 @@ class UserServiceImplTest {
     @Test
     void updateUserProfile_whenUserExists_savesAndReturnsUser() {
         when(userRepository.existsById(userId)).thenReturn(true);
+        // Use thenAnswer to return the argument that was passed to the save method
         when(userRepository.save(any(User.class))).thenAnswer(invocation -> invocation.getArgument(0));
 
         User updatedUser = new User();
