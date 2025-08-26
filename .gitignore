@@ -16,3 +16,9 @@ cloud-generators/target/classes/com/cloudwebshop/generator/ServiceGenerator.clas
 cloud-generators/target/classes/com/cloudwebshop/generator/model/MethodDefinition.class
 cloud-generators/target/classes/com/cloudwebshop/generator/model/ParameterDefinition.class
 cloud-generators/target/classes/com/cloudwebshop/generator/model/ServiceDefinition.class
+cloud-generators/target/classes/com/cloudwebshop/generator/Main.class
+cloud-generators/target/classes/com/cloudwebshop/generator/ModelParser.class
+cloud-generators/target/classes/com/cloudwebshop/generator/ServiceGenerator.class
+cloud-generators/target/classes/com/cloudwebshop/generator/model/MethodDefinition.class
+cloud-generators/target/classes/com/cloudwebshop/generator/model/ParameterDefinition.class
+cloud-generators/target/classes/com/cloudwebshop/generator/model/ServiceDefinition.class
