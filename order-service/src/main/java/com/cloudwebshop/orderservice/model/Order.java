@@ -1,8 +1,10 @@
 package com.cloudwebshop.orderservice.model;
 
+import com.vladmihalcea.hibernate.type.json.JsonType;
 import jakarta.persistence.*;
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.Type;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.math.BigDecimal;
@@ -35,10 +37,12 @@ public class Order {
     @Column(nullable = false)
     private String currency;
 
-    @Column(columnDefinition = "jsonb")
+    @Type(JsonType.class)
+    @Column(columnDefinition = "json")
     private String shippingAddress;
 
-    @Column(columnDefinition = "jsonb")
+    @Type(JsonType.class)
+    @Column(columnDefinition = "json")
     private String billingAddress;
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
