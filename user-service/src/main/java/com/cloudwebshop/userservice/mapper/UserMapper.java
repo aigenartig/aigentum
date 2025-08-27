@@ -1,6 +1,5 @@
 package com.cloudwebshop.userservice.mapper;
 
-import com.cloudwebshop.userservice.dto.CreateUserRequestDto;
 import com.cloudwebshop.userservice.dto.UserDto;
 import com.cloudwebshop.userservice.model.User;
 import org.mapstruct.Mapper;
@@ -12,6 +11,4 @@ public interface UserMapper {
     UserMapper INSTANCE = Mappers.getMapper(UserMapper.class);
 
     UserDto toUserDto(User user);
-
-    User toUser(CreateUserRequestDto requestDto);
 }

@@ -52,10 +52,20 @@ public class UserServiceRemoteTest {
         assertThat(createUserResponse.getStatusCode()).isEqualTo(HttpStatus.CREATED);
         UUID userId = createUserResponse.getBody().getId();
 
-        // First, get user profile to have a valid user id.
-        ResponseEntity<UserDto> userResponse = restTemplate.getForEntity(userServiceUrl + "/" + userId, UserDto.class);
-        assertThat(userResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertThat(userResponse.getBody().getId()).isEqualTo(userId);
+        // Add an item to the cart
+        AddItemRequestDto addItemRequest = new AddItemRequestDto();
+        addItemRequest.setProductId(UUID.randomUUID());
+        addItemRequest.setQuantity(2);
+
+        restTemplate.postForEntity(orderServiceUrl + "/cart/items?userId=" + userId, addItemRequest, Void.class);
+
+        // Create an order from the cart
+        ResponseEntity<OrderDto> createOrderResponse = restTemplate.postForEntity(orderServiceUrl + "/orders?userId=" + userId, null, OrderDto.class);
+        assertThat(createOrderResponse.getStatusCode()).isEqualTo(HttpStatus.CREATED);
+        OrderDto createdOrder = createOrderResponse.getBody();
+        assertThat(createdOrder).isNotNull();
+        assertThat(createdOrder.getUserId()).isEqualTo(userId);
+        assertThat(createdOrder.getStatus()).isEqualTo("NEW");
     }
 
 
