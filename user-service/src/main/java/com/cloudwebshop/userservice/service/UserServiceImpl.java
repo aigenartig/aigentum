@@ -24,6 +24,13 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional(readOnly = true)
+    public User getUserById(UUID userId) {
+        return userRepository.findById(userId)
+                .orElseThrow(() -> new EntityNotFoundException("User not found with id: " + userId));
+    }
+
+    @Override
     @Transactional
     public User updateUserProfile(User user) {
         // The user object is passed in already updated from the controller.
@@ -41,5 +48,13 @@ public class UserServiceImpl implements UserService {
         User user = getUserProfile(userId);
         user.setStatus(UserStatus.DELETED);
         userRepository.save(user);
+    }
+
+    @Override
+    @Transactional
+    public User createUser(User user) {
+        user.setStatus(UserStatus.ACTIVE);
+        user.setPasswordHash("dummy_password_hash");
+        return userRepository.save(user);
     }
 }

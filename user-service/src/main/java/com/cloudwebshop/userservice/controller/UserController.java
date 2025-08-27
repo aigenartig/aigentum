@@ -1,5 +1,6 @@
 package com.cloudwebshop.userservice.controller;
 
+import com.cloudwebshop.userservice.dto.CreateUserRequestDto;
 import com.cloudwebshop.userservice.dto.UpdateUserRequestDto;
 import com.cloudwebshop.userservice.dto.UserDto;
 import com.cloudwebshop.userservice.mapper.UserMapper;
@@ -31,6 +32,12 @@ public class UserController {
         return ResponseEntity.ok(userMapper.toUserDto(userEntity));
     }
 
+    @GetMapping("/{userId}")
+    public ResponseEntity<UserDto> getUserById(@PathVariable UUID userId) {
+        User user = userService.getUserById(userId);
+        return ResponseEntity.ok(userMapper.toUserDto(user));
+    }
+
     @PutMapping("/profile")
     public ResponseEntity<UserDto> updateProfile(@Valid @RequestBody UpdateUserRequestDto requestDto) {
         UUID userId = getAuthenticatedUserId();
@@ -58,5 +65,12 @@ public class UserController {
     public ResponseEntity<Void> deleteAccount() {
         userService.deleteUserAccount(getAuthenticatedUserId());
         return ResponseEntity.noContent().build();
+    }
+
+    @PostMapping
+    public ResponseEntity<UserDto> createUser(@Valid @RequestBody CreateUserRequestDto requestDto) {
+        User user = userMapper.toUser(requestDto);
+        User createdUser = userService.createUser(user);
+        return ResponseEntity.status(201).body(userMapper.toUserDto(createdUser));
     }
 }

@@ -8,7 +8,11 @@ public interface UserService {
 
     User getUserProfile(UUID userId);
 
+    User getUserById(UUID userId);
+
     User updateUserProfile(User user);
 
     void deleteUserAccount(UUID userId);
+
+    User createUser(User user);
 }
