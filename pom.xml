@@ -17,7 +17,7 @@
     <packaging>pom</packaging>
 
     <modules>
-        <module>user-service</module>
+        <module>userr-service</module>
         <module>order-service</module>
         <module>remote-tests</module>
         <module>cloud-generators</module>
