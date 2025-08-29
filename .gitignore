@@ -1,2 +1,3 @@
 cloud-generators/target
 remote-tests/target
+remote-tests/target/maven-status/maven-compiler-plugin/testCompile
