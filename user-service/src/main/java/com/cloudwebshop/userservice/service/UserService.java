@@ -11,4 +11,6 @@ public interface UserService {
     User updateUserProfile(User user);
 
     void deleteUserAccount(UUID userId);
+
+    User createUser(User user);
 }
