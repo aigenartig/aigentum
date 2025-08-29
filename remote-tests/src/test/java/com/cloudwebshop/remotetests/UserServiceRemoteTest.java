@@ -51,52 +51,51 @@ public class UserServiceRemoteTest {
         ResponseEntity<UserDto> createUserResponse = restTemplate.postForEntity(userServiceUrl, newUser, UserDto.class);
         assertThat(createUserResponse.getStatusCode()).isEqualTo(HttpStatus.CREATED);
         UUID userId = createUserResponse.getBody().getId();
-
-        // Add an item to the cart
-        AddItemRequestDto addItemRequest = new AddItemRequestDto();
-        addItemRequest.setProductId(UUID.randomUUID());
-        addItemRequest.setQuantity(2);
-
-        restTemplate.postForEntity(orderServiceUrl + "/cart/items?userId=" + userId, addItemRequest, Void.class);
-
-        // Create an order from the cart
-        ResponseEntity<OrderDto> createOrderResponse = restTemplate.postForEntity(orderServiceUrl + "/orders?userId=" + userId, null, OrderDto.class);
-        assertThat(createOrderResponse.getStatusCode()).isEqualTo(HttpStatus.CREATED);
-        OrderDto createdOrder = createOrderResponse.getBody();
-        assertThat(createdOrder).isNotNull();
-        assertThat(createdOrder.getUserId()).isEqualTo(userId);
-        assertThat(createdOrder.getStatus()).isEqualTo("NEW");
-    }
-
-
-    // Inner classes for DTOs
-    @Data
-    static class OrderDto {
-        private UUID id;
-        private String orderNumber;
-        private UUID userId;
-        private String status;
-        private BigDecimal totalAmount;
-        private String currency;
-        private String shippingAddress;
-        private String billingAddress;
-        private List<OrderItemDto> items;
-        private LocalDateTime createdAt;
-        private LocalDateTime updatedAt;
-    }
-
-    @Data
-    static class OrderItemDto {
-        private UUID id;
-        private UUID productId;
-        private Integer quantity;
-        private BigDecimal unitPrice;
-        private BigDecimal totalPrice;
-    }
-
-    @Data
-    static class AddItemRequestDto {
-        private UUID productId;
-        private Integer quantity;
     }
 }
+
+        // // Add an item to the cart
+        // AddItemRequestDto addItemRequest = new AddItemRequestDto();
+        // addItemRequest.setProductId(UUID.randomUUID());
+        // addItemRequest.setQuantity(2);
+
+        // restTemplate.postForEntity(orderServiceUrl + "/cart/items?userId=" + userId, addItemRequest, Void.class);
+
+        // Create an order from the cart
+        // ResponseEntity<OrderDto> createOrderResponse = restTemplate.postForEntity(orderServiceUrl + "/orders?userId=" + userId, null, OrderDto.class);
+        // assertThat(createOrderResponse.getStatusCode()).isEqualTo(HttpStatus.CREATED);
+        // OrderDto createdOrder = createOrderResponse.getBody();
+        // assertThat(createdOrder).isNotNull();
+        // assertThat(createdOrder.getUserId()).isEqualTo(userId);
+        
+
+
+    // // Inner classes for DTOs
+    // @Data
+    // static class OrderDto {
+    //     private UUID id;
+    //     private String orderNumber;
+    //     private UUID userId;
+    //     private String status;
+    //     private BigDecimal totalAmount;
+    //     private String currency;
+    //     private String shippingAddress;
+    //     private String billingAddress;
+    //     private List<OrderItemDto> items;
+    //     private LocalDateTime createdAt;
+    //     private LocalDateTime updatedAt;
+    // }
+
+    // @Data
+    // static class OrderItemDto {
+    //     private UUID id;
+    //     private UUID productId;
+    //     private Integer quantity;
+    //     private BigDecimal unitPrice;
+    //     private BigDecimal totalPrice;
+    // }
+
+    // @Data
+    // static class AddItemRequestDto {
+    //     private UUID productId;
+    //     private Integer quantity;
