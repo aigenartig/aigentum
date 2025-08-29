@@ -42,4 +42,14 @@ public class UserServiceImpl implements UserService {
         user.setStatus(UserStatus.DELETED);
         userRepository.save(user);
     }
+
+    @Override
+    @Transactional
+    public User createUser(User user) {
+        // In a real app, you might want to add more validation or logic here
+        // For example, checking if an email is already in use
+        user.setStatus(UserStatus.ACTIVE);
+        user.setPasswordHash("dummy_password_hash");
+        return userRepository.save(user);
+    }
 }

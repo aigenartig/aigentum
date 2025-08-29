@@ -7,6 +7,7 @@ import com.cloudwebshop.userservice.model.User;
 import com.cloudwebshop.userservice.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -58,5 +59,12 @@ public class UserController {
     public ResponseEntity<Void> deleteAccount() {
         userService.deleteUserAccount(getAuthenticatedUserId());
         return ResponseEntity.noContent().build();
+    }
+
+    @PostMapping
+    public ResponseEntity<UserDto> createUser(@Valid @RequestBody UserDto userDto) {
+        User userEntity = userMapper.toUser(userDto);
+        User createdUser = userService.createUser(userEntity);
+        return new ResponseEntity<>(userMapper.toUserDto(createdUser), HttpStatus.CREATED);
     }
 }
