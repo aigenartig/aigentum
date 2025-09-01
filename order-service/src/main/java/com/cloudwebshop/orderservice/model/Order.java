@@ -35,10 +35,10 @@ public class Order {
     @Column(nullable = false)
     private String currency;
 
-    @Column(columnDefinition = "jsonb")
+    @Column(columnDefinition = "CLOB")
     private String shippingAddress;
 
-    @Column(columnDefinition = "jsonb")
+    @Column(columnDefinition = "CLOB")
     private String billingAddress;
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
