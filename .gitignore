@@ -1,2 +1,4 @@
 cloud-generators/target
 remote-tests/target
+CloudRunDemo/target
+CloudRunDemo/build.log
